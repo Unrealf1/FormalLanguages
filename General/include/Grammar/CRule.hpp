@@ -16,7 +16,7 @@ namespace formals { namespace grammars {
         const bool is_terminal;
         const std::vector<uint32_t> left_part;
         const std::vector<uint32_t> right_part;
-    }
+    };
 }}
 
 #endif  // FORMALS_GENERAL_GRAMMAR_CRULE_HPP_
