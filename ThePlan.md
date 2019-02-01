@@ -1,5 +1,4 @@
 Grammar: /*Constant after creation?*/
-	Table of terminals and non-terminals (then I'm planning to use just numbers and flag is this symbol terminal, or not)
 	Set of rules
 	Operations:
 		Go through rules
@@ -8,3 +7,7 @@ Grammar: /*Constant after creation?*/
 
 Rule: /*Constant after creation*/
 	Has left and right sight. Should be inside grammar, as only numbers are stored /*Numbers are to increase compatibility with different types of symbols(which may be even more complex structures)*/
+
+Translator:
+	Should create link between numbers in rules and actual symbols(other types)
+	Gets "grammar output" -> gives understandable output
