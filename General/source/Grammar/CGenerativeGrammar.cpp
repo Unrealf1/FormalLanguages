@@ -2,8 +2,45 @@
 
 namespace formals { namespace grammars {
 
-        std::forward_iterator_tag CGenerativeGrammar::GetRuleIterator() {
-            //return rules_.begin();
+        GenerativeGrammarIterator::GenerativeGrammarIterator(CRule *pointer) :
+            pointer(pointer) {
+
+        }
+
+        GenerativeGrammarIterator::GenerativeGrammarIterator(const GenerativeGrammarIterator& it) :
+            pointer(it.pointer) {
+
+        }
+
+        bool GenerativeGrammarIterator::operator!=(GenerativeGrammarIterator const& other) const
+        {
+            return pointer != other.pointer;
+        }
+
+        bool GenerativeGrammarIterator::operator==(GenerativeGrammarIterator const& other) const
+        {
+            return pointer == other.pointer;
+        }
+
+        typename GenerativeGrammarIterator::reference GenerativeGrammarIterator::operator*() const
+        {
+            return *pointer;
+        }
+
+        GenerativeGrammarIterator &GenerativeGrammarIterator::operator++()
+        {
+            ++pointer;
+            return *this;
+        }
+
+        typedef GenerativeGrammarIterator iterator;
+
+        iterator CGenerativeGrammar::begin() {
+            return &(*(rules_.begin()));
+        }
+
+        iterator CGenerativeGrammar::end() {
+            return &(*(rules_.end()));
         }
 
         void CGenerativeGrammar::AddRule(const CRule& rule) {

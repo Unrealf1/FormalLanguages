@@ -2,6 +2,7 @@
 #define FORMALS_GENERAL_GRAMMAR_IGRAMMAR_HPP_
 
 #include <iterator>
+#include "CRule.hpp"
 
 namespace formals { namespace grammars {
 
@@ -10,9 +11,9 @@ namespace formals { namespace grammars {
     public:
         IGrammar() = default;
         virtual ~IGrammar() = default;
-        virtual std::forward_iterator_tag GetRuleIterator() = 0;
+
         virtual void AddRule(const CRule& rule) = 0;        
     };
 }}
 
-#endif  // FORMALS_GENERAL_GRAMMAR_CRULE_HPP_
+#endif  // FORMALS_GENERAL_GRAMMAR_IGRAMMAR_HPP_

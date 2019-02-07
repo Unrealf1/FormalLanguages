@@ -7,13 +7,33 @@
 
 namespace formals { namespace grammars {
 
+    class GenerativeGrammarIterator: public std::iterator<std::input_iterator_tag, CRule>
+    {
+        friend class CGenerativeGrammar;
+    public:
+        GenerativeGrammarIterator(const GenerativeGrammarIterator &it);
+
+        bool operator!=(GenerativeGrammarIterator const& other) const;
+        bool operator==(GenerativeGrammarIterator const& other) const;
+        typename GenerativeGrammarIterator::reference operator*() const;
+        GenerativeGrammarIterator& operator++();
+    private:
+        GenerativeGrammarIterator(CRule* pointer);
+        CRule* pointer;
+    };
+
     class CGenerativeGrammar : public IGrammar
     {
     public:
+        typedef GenerativeGrammarIterator iterator;
+
         CGenerativeGrammar() = default;
         virtual ~CGenerativeGrammar() = default;
-        virtual std::forward_iterator_tag GetRuleIterator() override;
-        virtual void AddRule(const CRule& rule) override;
+
+        virtual iterator begin();
+        virtual iterator end();
+
+        virtual void AddRule(const CRule& rule);
     private:
         std::vector<CRule> rules_;
     };
