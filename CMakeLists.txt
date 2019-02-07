@@ -7,3 +7,4 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(FormalLanguages)
 
 add_subdirectory("./General")
+add_subdirectory("./Test")
