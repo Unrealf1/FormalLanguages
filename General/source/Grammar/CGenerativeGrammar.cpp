@@ -46,4 +46,8 @@ namespace formals { namespace grammars {
         void CGenerativeGrammar::AddRule(const CRule& rule) {
             rules_.push_back(rule);
         }
+
+        size_t CGenerativeGrammar::Size() const {
+            return rules_.size();
+        }
 }}

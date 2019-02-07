@@ -12,7 +12,8 @@ namespace formals { namespace grammars {
         IGrammar() = default;
         virtual ~IGrammar() = default;
 
-        virtual void AddRule(const CRule& rule) = 0;        
+        virtual void AddRule(const CRule& rule) = 0;
+        virtual size_t Size() const = 0;  
     };
 }}
 

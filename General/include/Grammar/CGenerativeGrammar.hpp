@@ -19,7 +19,7 @@ namespace formals { namespace grammars {
         GenerativeGrammarIterator& operator++();
     private:
         GenerativeGrammarIterator(CRule* pointer);
-        CRule* pointer;
+        std::vector<CRule>::iterator pointer;
     };
 
     class CGenerativeGrammar : public IGrammar
@@ -34,6 +34,7 @@ namespace formals { namespace grammars {
         virtual iterator end();
 
         virtual void AddRule(const CRule& rule);
+        virtual size_t Size() const override;
     private:
         std::vector<CRule> rules_;
     };
