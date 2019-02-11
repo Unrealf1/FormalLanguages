@@ -9,7 +9,7 @@ namespace formals { namespace grammars {
     struct RuleSymbol {
         uint32_t value;
         bool is_terminal;
-    }
+    };
 
     struct CRule
     {
