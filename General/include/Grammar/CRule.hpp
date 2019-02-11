@@ -6,16 +6,20 @@
 
 namespace formals { namespace grammars {
     
+    struct RuleSymbol {
+        uint32_t value;
+        bool is_terminal;
+    }
+
     struct CRule
     {
     public:
-        CRule (const std::vector<uint32_t>& left_part, 
-            const std::vector<uint32_t>& right_part, const bool is_terminal);
+        CRule (const std::vector<RuleSymbol>& left_part, 
+            const std::vector<RuleSymbol>& right_part);
         ~CRule() = default;
 
-        const bool is_terminal;
-        const std::vector<uint32_t> left_part;
-        const std::vector<uint32_t> right_part;
+        const std::vector<RuleSymbol> left_part;
+        const std::vector<RuleSymbol> right_part;
     };
 }}
 

@@ -9,7 +9,7 @@ int main() {
     for (int i = 0; i < 5; ++i) {
         grammar.AddRule(formals::grammars::CRule(
             std::vector<unsigned int>({1, 2, 3}),
-            std::vector<unsigned int>({1, 2, 3}), true));
+            std::vector<unsigned int>({1, 2, 3})));
     }
     std::cout << "I am working, and grammar is located here: " << &grammar << std::endl;
     std::cout << "begin returned something with address " << &(*(grammar.begin())) << '\n'
