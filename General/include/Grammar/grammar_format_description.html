@@ -1,0 +1,100 @@
+<html>
+<h2>
+    GRAMMAR file format    
+</h2>
+
+<p>
+    At the top of the file there's array, which gives a string to each number<br>
+    from 0 to <i>Number of terminals</i> + <i>Number of non-terminals</i> - 1 which<br>
+    is "value" (element of alphabet = string here) of this number. Than there's dict which<br>
+    consists of "number of symbols in left part, number of symbols in right part, left<br>
+    part and right part.<br>
+    
+</p> 
+
+<br>
+<br>
+
+<TABLE border=2px> 
+    <CAPTION>Internal organization</CAPTION>
+    <TR>
+        <TD>Bytes</TD>
+        <TD>Value(little-endian)</TD>
+    </TR>
+    <TR>
+        <TD>0-3</TD>
+        <TD>6772 616d 6d61 720a</TD>
+    </TR>
+    <TR>
+        <TD>4-7</TD>
+        <TD>Flags</TD>
+    </TR>
+    <TR>
+        <TD>8-11</TD>
+        <TD>Size of file in bytes (uint32_t)</TD>
+    </TR>
+    <TR>
+        <TD>12-15</TD>
+        <TD>Number of terminals (uint32_t)</TD>
+    </TR>
+    <TR>
+        <TD>16-19</TD>
+        <TD>Number of non-terminals (uint32_t)</TD>
+    </TR>
+    <TR>
+        <TD>20-23</TD>
+        <TD>Number of entries* in an array</TD>
+    </TR>
+    <TR>
+        <TD>24-77</TD>
+        <TD>Position of start of the dict (uint32_t)</TD>
+    </TR>
+    <TR>
+        <TD>78-81</TD>
+        <TD>Number of entries in a dict</TD>
+    </TR>
+    <TR>
+        <TD>81-EOA*</TD>
+        <TD>Array: enries one by one without any space between</TD>
+    </TR>
+    <TR>
+        <TD>EOA+1 - EOD*</TD>
+        <TD>Dict: enries one by one without any space between</TD>
+    </TR>
+</TABLE>
+
+<br>
+
+<TABLE border=2px>
+    <CAPTION>Dict entry</CAPTION>
+    <TR>
+        <TD>Bytes</TD>
+        <TD>Value(little-endian)</TD>
+    </TR>
+    <TR>
+        <TD>0-1</TD>
+        <TD>Number of symbols in left part (uint16)</TD>
+    </TR>
+    <TR>
+        <TD>2-3</TD>
+        <TD>Number of symbols in right part (uint16)</TD>
+    </TR> 
+    <TR>
+        <TD>4-EOL*</TD>
+        <TD>Left part = sequence of uint32</TD>
+    </TR>
+    <TR>
+        <TD>EOL+1 - EOR*</TD>
+        <TD>Right part = sequence of uint32</TD>
+    </TR>      
+</TABLE>
+
+<P>
+    *Array entry is a string ending with \0<br>
+    *EOA = End of array<br>
+    *EOD = End of dictionary<br>
+    *EOL = End of left part<br>
+    *EOR = End of right part<br>
+</P>
+
+</html>

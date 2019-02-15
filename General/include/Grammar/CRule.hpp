@@ -23,4 +23,27 @@ namespace formals { namespace grammars {
     };
 }}
 
+namespace std {
+
+    template<>
+    class hash<formals::grammars::CRule> {
+    public:
+        size_t operator()(const formals::grammars::CRule& rule) const
+        {
+            size_t hash_const = (rule.left_part.size() + rule.right_part.size())/33 + 1;
+            size_t res = 0;
+            for (auto i : rule.left_part) {
+                res += i.value - hash_const * i.is_terminal;
+                res *= hash_const;
+            }
+            for (auto i : rule.right_part) {
+                res += i.value - hash_const * i.is_terminal;
+                res *= hash_const;
+            }
+
+            return res;
+        }
+    };
+}
+
 #endif  // FORMALS_GENERAL_GRAMMAR_CRULE_HPP_
