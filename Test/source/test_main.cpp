@@ -1,9 +1,13 @@
 #include <iostream>
 #include <vector>
+#include <memory>
 #include "Grammar/CGenerativeGrammar.hpp"
+#include "Grammar/Serialization/CGrammarDeserializer.hpp"
 
 int main() {
-    formals::grammars::CGenerativeGrammar grammar;
+    //formals::grammars::CGrammarDeserializer deser(std::cin);
+    //std::shared_ptr<formals::grammars::CGenerativeGrammar> fake_gr = deser.GetGrammar();
+    formals::grammars::CGenerativeGrammar grammar;  
     grammar.begin();
     grammar.end();
     for (int i = 0; i < 5; ++i) {
