@@ -9,6 +9,7 @@ namespace formals { namespace grammars {
     struct RuleSymbol {
         uint32_t value;
         bool is_terminal;
+        bool is_starting;
     };
 
     struct CRule
@@ -33,11 +34,11 @@ namespace std {
             size_t hash_const = (rule.left_part.size() + rule.right_part.size())/33 + 1;
             size_t res = 0;
             for (auto i : rule.left_part) {
-                res += i.value - hash_const * i.is_terminal;
+                res += i.value - hash_const * i.is_terminal + i.is_starting;
                 res *= hash_const;
             }
             for (auto i : rule.right_part) {
-                res += i.value - hash_const * i.is_terminal;
+                res += i.value - hash_const * i.is_terminal + i.is_starting;
                 res *= hash_const;
             }
 

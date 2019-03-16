@@ -1,0 +1,35 @@
+<html>
+<h2>
+    GRAMMAR text presentation format
+</h2>
+
+<p>
+    At the top of the file there's caption "Terminals(%u):", where '%u' stands for number<br>
+    of terminals grammar have. This line should be followed by same amount of lines in each<br>
+    is another terminal. Spaces, line foldings and '-' symbol are not allowed in terminals(and non-terminals). <br>
+    Then there is similar section, starting with "Non-terminals(%u):" line. But every <br>
+    <i>starting</i> non-terminal should be followed by 'S' after a single space.<br>
+    <b>Important:</b> names of terminals and non-terminals should not intersect<br>
+    The last section consists of "Rules(%u):" line and same number of rules(one line = one rule)<br>
+    Lets refer to both terminal and non-terminal as <i>item</i>. Then rules are described like this:<br>
+    <b>item1 item2 ... itemN - itemN+1 itemN+2 ... itemN+K</b><br>
+    where N is number of items in the left part of the rule and K is number of item in the right part.<br>
+    <b>Important:</b> if there is only <i>epsilon(nothing)</i> in the right part, then it should be left<br>
+    like this: "<b>item1 item2 ... itemN - </b>"<br>
+    <b>Important:</b> each line should be no longer than 4096 bytes.<br>
+
+</p>
+<br>
+<h3>
+    Example:
+</h3>
+
+Terminals(2):<br>
+a<br>
+b<br>
+Non-terminals(1):<br>
+A S<br>
+Rules(3):<br>
+S - <br>
+S - S S<br>
+S - a S b<br>

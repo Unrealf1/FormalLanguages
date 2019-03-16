@@ -44,6 +44,7 @@ namespace formals { namespace grammars {
         }
 
         void CGenerativeGrammar::AddRule(const CRule& rule) {
+            //May be should maintain something(rules with starting)
             rules_.push_back(rule);
         }
 

@@ -3,9 +3,11 @@
 
 #include <memory>
 #include <cinttypes>
-#include <istream>
 #include <unordered_set>
 #include <string>
+#include <cassert>
+#include <iostream>
+#include "ErrorHelper.h"
 #include "Grammar/CGenerativeGrammar.hpp"
 #include "Grammar/CRule.hpp"
 
@@ -16,15 +18,32 @@ namespace formals { namespace grammars {
         using mode_t = uint16_t;
         public:
             CGrammarDeserializer(std::istream& stream, uint16_t mode);
-            CGrammarDeserializer(std::istream& stream);
+            explicit CGrammarDeserializer(std::istream& stream);
             std::shared_ptr<CGenerativeGrammar> GetGrammar(); 
         private:
             std::shared_ptr<CGenerativeGrammar> my_grammar_;
             std::istream& stream_;
             mode_t mode_;
 
-            std::shared_ptr<CGenerativeGrammar> binary_decode();
-            std::shared_ptr<CGenerativeGrammar> text_decode();
+            /*
+             * This two methods use stream given in constructor and attempt to deserialize
+             * grammar from it. On success pointer to grammar is returned.
+             * On failure nullptr is returned. They assume, that my_grammar_ is empty and exists
+            */
+            std::shared_ptr<CGenerativeGrammar> binaryDecode();
+            std::shared_ptr<CGenerativeGrammar> textDecode();
+
+            ssize_t getNumberFromText(const std::string&) const;
+            bool readTerminals(std::unordered_set<std::string>& terminals, size_t number) const;
+            bool readNonTerminals(
+                    std::unordered_set<std::string>& non_terminals,
+                    std::unordered_set<std::string>& starting,
+                    size_t number) const;
+            bool readRules(
+                    std::unordered_set<std::string>& terminals,
+                    std::unordered_set<std::string>& non_terminals,
+                    std::unordered_set<std::string>& starting,
+                    size_t number) const;
     };
 
 }}
