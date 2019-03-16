@@ -10,6 +10,7 @@
 #include "ErrorHelper.h"
 #include "Grammar/CGenerativeGrammar.hpp"
 #include "Grammar/CRule.hpp"
+#include "Grammar/Serialization/CGrammarRepresenter.h"
 
 namespace formals { namespace grammars {
 
@@ -17,11 +18,15 @@ namespace formals { namespace grammars {
     {
         using mode_t = uint16_t;
         public:
-            CGrammarDeserializer(std::istream& stream, uint16_t mode);
+            CGrammarDeserializer(
+                    std::istream& stream,
+                    uint16_t mode);
             explicit CGrammarDeserializer(std::istream& stream);
-            std::shared_ptr<CGenerativeGrammar> GetGrammar(); 
+            std::shared_ptr<CGenerativeGrammar> GetGrammar();
+            std::shared_ptr<CGrammarRepresenter> GetRepresenter();
         private:
             std::shared_ptr<CGenerativeGrammar> my_grammar_;
+            std::shared_ptr<CGrammarRepresenter> my_grammar_representer_;
             std::istream& stream_;
             mode_t mode_;
 
@@ -34,8 +39,12 @@ namespace formals { namespace grammars {
             std::shared_ptr<CGenerativeGrammar> textDecode();
 
             ssize_t getNumberFromText(const std::string&) const;
-            bool readTerminals(std::unordered_set<std::string>& terminals, size_t number) const;
+            bool readTerminals(
+                    std::unordered_map<ruleSymbolValyeType, std::string> dict,
+                    std::unordered_set<std::string>& terminals,
+                    size_t number) const;
             bool readNonTerminals(
+                    std::unordered_map<ruleSymbolValyeType, std::string> dict,
                     std::unordered_set<std::string>& non_terminals,
                     std::unordered_set<std::string>& starting,
                     size_t number) const;

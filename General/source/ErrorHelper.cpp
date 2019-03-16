@@ -15,6 +15,9 @@ namespace formals { namespace  errors {
                 std::cout << "Wrong text format" << std::endl;
                 break;
             }
+            case ErrorType::unreachable_code: {
+                std::cout << "Reached unreachable code!" << std::endl;
+            }
         }
     }
 }}

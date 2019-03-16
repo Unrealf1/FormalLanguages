@@ -5,9 +5,11 @@
 #include <cstdint>
 
 namespace formals { namespace grammars {
-    
+
+    using ruleSymbolValyeType = uint32_t;
+
     struct RuleSymbol {
-        uint32_t value;
+        ruleSymbolValyeType value;
         bool is_terminal;
         bool is_starting;
     };

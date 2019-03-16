@@ -56,15 +56,20 @@ namespace formals { namespace grammars {
         }
 
         bool CGrammarDeserializer::readTerminals(
+                std::unordered_map<ruleSymbolValyeType, std::string> dict,
                 std::unordered_set<std::string>& terminals,
                 size_t number) const {
-
+            formals::errors::ReportError(errors::not_implemented);
+            return false;
         }
 
         bool CGrammarDeserializer::readNonTerminals(
+                std::unordered_map<ruleSymbolValyeType, std::string> dict,
                 std::unordered_set<std::string>& non_terminals,
                 std::unordered_set<std::string>& starting,
                 size_t number) const {
+            formals::errors::ReportError(errors::not_implemented);
+            return false;
 
         }
 
@@ -73,11 +78,14 @@ namespace formals { namespace grammars {
                 std::unordered_set<std::string>& non_terminals,
                 std::unordered_set<std::string>& starting,
                 size_t number) const {
+            formals::errors::ReportError(errors::not_implemented);
+            return false;
 
         }
 
         std::shared_ptr<CGenerativeGrammar> CGrammarDeserializer::textDecode() {
             std::string current_line;
+            std::unordered_map<ruleSymbolValyeType, std::string> dict;
 
             std::getline(stream_, current_line);
             ssize_t number_of_terminals = getNumberFromText(current_line);
@@ -86,7 +94,7 @@ namespace formals { namespace grammars {
                 return nullptr;
             }
             std::unordered_set<std::string> terminals;
-            if (readTerminals(terminals, number_of_terminals)) {
+            if (readTerminals(dict, terminals, number_of_terminals)) {
                 formals::errors::ReportError(formals::errors::ErrorType::wrong_text_format);
                 return nullptr;
             }
@@ -99,7 +107,7 @@ namespace formals { namespace grammars {
             }
             std::unordered_set<std::string> non_terminals;
             std::unordered_set<std::string> starting;
-            if (readNonTerminals(non_terminals, starting, number_of_non_terminals)) {
+            if (readNonTerminals(dict, non_terminals, starting, number_of_non_terminals)) {
                 formals::errors::ReportError(formals::errors::ErrorType::wrong_text_format);
                 return nullptr;
             }
@@ -122,6 +130,7 @@ namespace formals { namespace grammars {
         std::shared_ptr<CGenerativeGrammar> CGrammarDeserializer::GetGrammar() {
             if (my_grammar_ == nullptr) {
                 my_grammar_ = std::make_shared<CGenerativeGrammar>();
+                my_grammar_representer_.reset();
                 if (mode_ == GRAMMAR_DES_BINARY) {
                     my_grammar_ = binaryDecode();
                 }
