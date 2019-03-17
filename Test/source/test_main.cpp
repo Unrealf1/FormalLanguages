@@ -3,16 +3,17 @@
 #include <memory>
 #include "Grammar/CGenerativeGrammar.hpp"
 #include "Grammar/Serialization/CGrammarDeserializer.hpp"
+#include "Grammar/Serialization/CGrammarRepresenter.h"
 
 int main() {
     //formals::grammars::CGrammarDeserializer deser(std::cin);
     //std::shared_ptr<formals::grammars::CGenerativeGrammar> fake_gr = deser.GetGrammar();
-    formals::grammars::CGenerativeGrammar grammar;  
+    /*formals::grammars::CGenerativeGrammar grammar;
     grammar.begin();
     grammar.end();
     for (int i = 0; i < 5; ++i) {
         grammar.AddRule(formals::grammars::CRule(
-            std::vector<formals::grammars::RuleSymbol>({{1, false}, {2, true}, {3, false}}),
+            std::vector<formals::grammars::RuleSymbol>({{1, false, false}, {2, true}, {3, false}}),
             std::vector<formals::grammars::RuleSymbol>({{1, false}, {2, true}, {3, false}})));
     }
     std::cout << "I am working, and grammar is located here: " << &grammar << std::endl;
@@ -24,5 +25,10 @@ int main() {
         ++n;
         ++it;
     }
-    std::cout << "Grammar has " << n << " rules, but for real: " << grammar.Size() << "\n"; 
+    std::cout << "Grammar has " << n << " rules, but for real: " << grammar.Size() << "\n";
+
+    */
+    formals::grammars::CGrammarDeserializer deserializer(std::cin, formals::grammars::ReadMode::text);
+    std::cout << "\nNow please enter yor grammar here:" << std::endl;
+    std::shared_ptr<formals::grammars::CGenerativeGrammar> user_grammar = deserializer.GetGrammar();
 }

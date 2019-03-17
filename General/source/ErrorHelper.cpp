@@ -5,18 +5,18 @@
 #include "ErrorHelper.h"
 
 namespace formals { namespace  errors {
-    void ReportError(ErrorType error) {
+    void ReportError(ErrorType error, const std::string& info) {
         switch (error) {
             case ErrorType::not_implemented: {
-                std::cerr << "This is not implemented yet" << std::endl;
+                std::cerr << info << ": This is not implemented yet" << std::endl;
                 break;
             }
             case ErrorType::wrong_text_format: {
-                std::cout << "Wrong text format" << std::endl;
+                std::cout << info << ": Wrong text format" << std::endl;
                 break;
             }
             case ErrorType::unreachable_code: {
-                std::cout << "Reached unreachable code!" << std::endl;
+                std::cout << info << ": Reached unreachable code!" << std::endl;
             }
         }
     }

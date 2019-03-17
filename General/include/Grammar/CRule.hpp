@@ -6,7 +6,7 @@
 
 namespace formals { namespace grammars {
 
-    using ruleSymbolValyeType = uint32_t;
+    using ruleSymbolValyeType = size_t;
 
     struct RuleSymbol {
         ruleSymbolValyeType value;

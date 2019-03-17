@@ -7,20 +7,25 @@
 #include <string>
 #include <cassert>
 #include <iostream>
+#include <vector>
 #include "ErrorHelper.h"
 #include "Grammar/CGenerativeGrammar.hpp"
 #include "Grammar/CRule.hpp"
 #include "Grammar/Serialization/CGrammarRepresenter.h"
 
 namespace formals { namespace grammars {
+    enum class ReadMode {
+        binary, text
+    };
 
     class CGrammarDeserializer
     {
-        using mode_t = uint16_t;
+
+
         public:
             CGrammarDeserializer(
                     std::istream& stream,
-                    uint16_t mode);
+                    ReadMode mode);
             explicit CGrammarDeserializer(std::istream& stream);
             std::shared_ptr<CGenerativeGrammar> GetGrammar();
             std::shared_ptr<CGrammarRepresenter> GetRepresenter();
@@ -28,7 +33,7 @@ namespace formals { namespace grammars {
             std::shared_ptr<CGenerativeGrammar> my_grammar_;
             std::shared_ptr<CGrammarRepresenter> my_grammar_representer_;
             std::istream& stream_;
-            mode_t mode_;
+            ReadMode mode_;
 
             /*
              * This two methods use stream given in constructor and attempt to deserialize
@@ -41,17 +46,19 @@ namespace formals { namespace grammars {
             ssize_t getNumberFromText(const std::string&) const;
             bool readTerminals(
                     std::unordered_map<ruleSymbolValyeType, std::string> dict,
-                    std::unordered_set<std::string>& terminals,
+                    std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& terminals,
                     size_t number) const;
             bool readNonTerminals(
                     std::unordered_map<ruleSymbolValyeType, std::string> dict,
-                    std::unordered_set<std::string>& non_terminals,
-                    std::unordered_set<std::string>& starting,
+                    std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& non_terminals,
+                    std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
             bool readRules(
-                    std::unordered_set<std::string>& terminals,
-                    std::unordered_set<std::string>& non_terminals,
-                    std::unordered_set<std::string>& starting,
+                    std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& terminals,
+                    std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
     };
 
