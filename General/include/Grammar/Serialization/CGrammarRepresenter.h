@@ -11,6 +11,7 @@
 #include <cinttypes>
 #include <ostream>
 #include <vector>
+#include <memory>
 #include "Grammar/CRule.hpp"
 #include "Grammar/CGenerativeGrammar.hpp"
 #include "ErrorHelper.h"
@@ -22,6 +23,9 @@ namespace formals { namespace grammars {
                 std::unordered_map<ruleSymbolValyeType, std::string>&& dict);
         bool Represent(
                 CGenerativeGrammar& grammar,
+                std::ostream& os);
+        bool Represent(
+                std::shared_ptr<CGenerativeGrammar> grammar,
                 std::ostream& os);
     private:
         std::unordered_map<ruleSymbolValyeType, std::string> dict_;

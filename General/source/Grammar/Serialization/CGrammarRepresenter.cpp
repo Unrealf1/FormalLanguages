@@ -42,6 +42,12 @@ namespace formals { namespace grammars {
     }
 
     bool CGrammarRepresenter::Represent(
+            std::shared_ptr<formals::grammars::CGenerativeGrammar> grammar,
+            std::ostream &os) {
+        return Represent(*grammar, os);
+    }
+
+    bool CGrammarRepresenter::Represent(
             CGenerativeGrammar& grammar,
             std::ostream& os) {
 
@@ -60,12 +66,12 @@ namespace formals { namespace grammars {
         for (auto& symbol : non_terminals) {
             os << dict_[symbol];
             if (starting.find(symbol) != starting.end()) {
-                os << " S";
+                os << "-S";
             }
             os << '\n';
         }
 
-        os << "Rules(" << non_terminals.size() << "):\n";
+        os << "Rules(" << grammar.Size() << "):\n";
         for (auto& rule : grammar) {
             for (auto& item : rule.left_part) {
                 os << dict_[item.value] << ' ';

@@ -17,6 +17,11 @@ namespace formals { namespace  errors {
             }
             case ErrorType::unreachable_code: {
                 std::cout << info << ": Reached unreachable code!" << std::endl;
+                break;
+            }
+            case ErrorType::null_pointer: {
+                std::cout << info << ": Got null pointer" << std::endl;
+                break;
             }
         }
     }

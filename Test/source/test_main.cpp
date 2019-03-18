@@ -75,4 +75,12 @@ int main(int argc, char** argv) {
         std::cout << std::endl;
     }
 
+    std::cout << "Representation:\n";
+    std::shared_ptr<formals::grammars::CGrammarRepresenter> representer =
+            deserializer.GetRepresenter();
+    if (representer != nullptr) {
+        representer->Represent(user_grammar, std::cout);
+    } else {
+        formals::errors::ReportError(formals::errors::ErrorType::null_pointer);
+    }
 }

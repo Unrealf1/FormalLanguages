@@ -221,13 +221,27 @@ namespace formals { namespace grammars {
                         "Rules section");
                 return nullptr;
             }
-
+            my_grammar_representer_.reset(new CGrammarRepresenter(std::move(dict)));
             return my_grammar_;
         }
 
         std::shared_ptr<CGrammarRepresenter> CGrammarDeserializer::GetRepresenter() {
-            errors::ReportError(errors::ErrorType::not_implemented, "GetRepresenter");
-            return nullptr;
+            if (my_grammar_ == nullptr) {
+                my_grammar_ = std::make_shared<CGenerativeGrammar>();
+                my_grammar_representer_.reset();
+                if (mode_ == ReadMode::binary) {
+                    my_grammar_ = binaryDecode();
+                }
+                else if (mode_ == ReadMode::text) {
+                    my_grammar_ = textDecode();
+                }
+                else {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::unreachable_code,
+                            "CGrammarDeserializer::GetRepresenter");
+                }
+            }
+            return my_grammar_representer_;
         }
 
         std::shared_ptr<CGenerativeGrammar> CGrammarDeserializer::GetGrammar() {
