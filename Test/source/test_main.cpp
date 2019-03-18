@@ -6,11 +6,6 @@
 #include "Grammar/Serialization/CGrammarDeserializer.hpp"
 #include "Grammar/Serialization/CGrammarRepresenter.h"
 
-
-#include "stdio.h"
-#include "fcntl.h"
-#include "stdlib.h"
-
 int main(int argc, char** argv) {
     //formals::grammars::CGrammarDeserializer deser(std::cin);
     //std::shared_ptr<formals::grammars::CGenerativeGrammar> fake_gr = deser.GetGrammar();
@@ -67,7 +62,7 @@ int main(int argc, char** argv) {
 
         std::cout << "-> ";
 
-        for (auto& sym : rule.left_part) {
+        for (auto& sym : rule.right_part) {
             std::cout << sym.value;
             if (!sym.is_terminal) {
                 std::cout << '*';

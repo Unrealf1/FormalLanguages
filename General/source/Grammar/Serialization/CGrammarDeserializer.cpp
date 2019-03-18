@@ -53,8 +53,8 @@ namespace formals { namespace grammars {
         }
 
         bool CGrammarDeserializer::readTerminals(
-                std::unordered_map<ruleSymbolValyeType, std::string> dict,
-                std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                 std::unordered_set<ruleSymbolValyeType>& terminals,
                 size_t number) const {
 
@@ -78,8 +78,8 @@ namespace formals { namespace grammars {
         }
 
         bool CGrammarDeserializer::readNonTerminals(
-                std::unordered_map<ruleSymbolValyeType, std::string> dict,
-                std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                 std::unordered_set<ruleSymbolValyeType>& non_terminals,
                 std::unordered_set<ruleSymbolValyeType>& starting,
                 size_t number) const {
@@ -115,15 +115,15 @@ namespace formals { namespace grammars {
                         current_position - last_position - 1));
                 last_position = current_position;
             }
-            if (current_position < right_part_line.size() - 1) {
+            if (last_position < right_part_line.size() - 1) {
                 items.push_back(right_part_line.substr(
-                        current_position + 1,
-                        right_part_line.size() - current_position));
+                        last_position + 1,
+                        right_part_line.size() - last_position));
             }
         }
 
         bool CGrammarDeserializer::readRules(
-                std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                 std::unordered_set<ruleSymbolValyeType>& terminals,
                 std::unordered_set<ruleSymbolValyeType>& starting,
                 size_t number) const {
@@ -148,6 +148,7 @@ namespace formals { namespace grammars {
                 std::string right_part_line;
                 std::getline(stream_, right_part_line);
                 std::vector<std::string> right_items;
+
                 GetRightPartFromLine(right_part_line, right_items);
                 std::vector<RuleSymbol> right_part;
 
@@ -174,6 +175,7 @@ namespace formals { namespace grammars {
 
             std::getline(stream_, current_line);
             ssize_t number_of_terminals = getNumberFromText(current_line);
+
             if (number_of_terminals == -1) {
                 formals::errors::ReportError(
                         formals::errors::ErrorType::wrong_text_format,

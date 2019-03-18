@@ -45,18 +45,18 @@ namespace formals { namespace grammars {
 
             ssize_t getNumberFromText(const std::string&) const;
             bool readTerminals(
-                    std::unordered_map<ruleSymbolValyeType, std::string> dict,
-                    std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                    std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                     std::unordered_set<ruleSymbolValyeType>& terminals,
                     size_t number) const;
             bool readNonTerminals(
-                    std::unordered_map<ruleSymbolValyeType, std::string> dict,
-                    std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                    std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                     std::unordered_set<ruleSymbolValyeType>& non_terminals,
                     std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
             bool readRules(
-                    std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict,
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                     std::unordered_set<ruleSymbolValyeType>& terminals,
                     std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
