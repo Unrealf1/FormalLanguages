@@ -174,4 +174,5 @@ TEST(DeserializationTests, test_samples) {
         ASSERT_EQ(non_terminals_count_answer, non_terminals.size());
         ASSERT_EQ(starting_non_terminals_count_answer, starting_non_terminals.size());
     }
+    closedir(dir);
 }
