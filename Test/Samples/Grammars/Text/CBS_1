@@ -1,9 +1,9 @@
 Terminals(2):
-a
+aaaaaaaaaaaaaaaaaaaaaaa
 b
 Non-terminals(1):
 A-S
 Rules(3):
 A -
 A - A A
-A - a A b
+A - aaaaaaaaaaaaaaaaaaaaaaa A b

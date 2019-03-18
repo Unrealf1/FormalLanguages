@@ -23,6 +23,10 @@ namespace formals { namespace  errors {
                 std::cout << info << ": Got null pointer" << std::endl;
                 break;
             }
+            case ErrorType::cant_open_file: {
+                std::cout << info << ": Can't open file" << std::endl;
+                break;
+            }
         }
     }
 }}

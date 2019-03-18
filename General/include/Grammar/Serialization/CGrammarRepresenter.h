@@ -19,7 +19,7 @@
 namespace formals { namespace grammars {
     class CGrammarRepresenter {
     public:
-        CGrammarRepresenter (
+        explicit CGrammarRepresenter (
                 std::unordered_map<ruleSymbolValyeType, std::string>&& dict);
         bool Represent(
                 CGenerativeGrammar& grammar,

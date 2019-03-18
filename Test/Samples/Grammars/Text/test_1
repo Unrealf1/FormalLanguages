@@ -1,0 +1,16 @@
+Terminals(3):
+a
+b
+c
+Non-terminals(4):
+S'-S
+S
+C
+D
+Rules(6):
+S' - S
+S - C
+S - C S
+C - D c
+D - a D b
+D -
