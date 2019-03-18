@@ -8,7 +8,7 @@ project(FormalLanguages)
 
 option(DEBUG "Build with debug flags" OFF)
 if (DEBUG)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fsanitize=address -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fsanitize=address,undefined -g")
 endif(DEBUG)
 
 add_subdirectory("./General")

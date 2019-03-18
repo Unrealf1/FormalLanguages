@@ -106,9 +106,20 @@ namespace formals { namespace grammars {
         void GetRightPartFromLine(
                 const std::string& right_part_line,
                 std::vector<std::string>& items) {
-            (void)right_part_line;
-            (void)items;
-            formals::errors::ReportError(errors::ErrorType::not_implemented, "GetRightPartFromLine");
+            size_t last_position = right_part_line.find(' ');
+            size_t current_position = 0;
+            while ((current_position = right_part_line.find(' ', last_position + 1)) !=
+                    std::string::npos) {
+                items.push_back(right_part_line.substr(
+                        last_position + 1,
+                        current_position - last_position - 1));
+                last_position = current_position;
+            }
+            if (current_position < right_part_line.size() - 1) {
+                items.push_back(right_part_line.substr(
+                        current_position + 1,
+                        right_part_line.size() - current_position));
+            }
         }
 
         bool CGrammarDeserializer::readRules(
@@ -228,7 +239,9 @@ namespace formals { namespace grammars {
                     my_grammar_ = textDecode();
                 }
                 else {
-                    formals::errors::ReportError(formals::errors::ErrorType::unreachable_code);
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::unreachable_code,
+                            "CGrammarDeserializer::GetGrammar");
                 }
             }
 
