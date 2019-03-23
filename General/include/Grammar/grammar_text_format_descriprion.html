@@ -6,33 +6,101 @@
 Note: this is still work in progress<br>
 
 <p>
-    The first line is optional. It is line of parameters, starting with "Param: "<br>
+    The first line is optional. It is line of parameters, starting with "Parameters: "<br>
+    Each parameter must not have more than one entry in this line.<br>
+    Following description is valid for empty(or absent) parameters line.<br><br>
     At the top of the file there's caption "Terminals(%u):", where '%u' stands for number<br>
     of terminals grammar have. This line should be followed by same amount of lines in each<br>
-    is another terminal. Spaces, line foldings and '-' symbol are not allowed in terminals(and non-terminals). <br>
+    is another terminal. Spaces, line foldings and '-' symbol are not allowed in terminals(and non-terminals).<br><br>
     Then there is similar section, starting with "Non-terminals(%u):" line. But every <br>
-    <i>starting</i> non-terminal should be followed by "-S" without a space.<br>
-    <b>Important:</b> names of terminals and non-terminals should not intersect<br>
+    <i>starting</i> non-terminal should be followed by "-S" without a space.<br><br>
+    <b>Important:</b> names of terminals and non-terminals should not intersect<br><br>
     The last section consists of "Rules(%u):" line and same number of rules(one line = one rule)<br>
     Lets refer to both terminal and non-terminal as <i>item</i>. Then rules are described like this:<br>
     <b>item1 item2 ... itemN - itemN+1 itemN+2 ... itemN+K</b><br>
     where N is number of items in the left part of the rule and K is number of item in the right part.<br>
     <b>Important:</b> if there is only <i>epsilon(nothing)</i> in the right part, then it should be left<br>
-    like this: "<b>item1 item2 ... itemN - </b>"<br>
+    like this: "<b>item1 item2 ... itemN - </b>"<br><br>
     <b>Important:</b> each line should be no longer than 4096 bytes.<br>
 
 </p>
-<br>
-<h3>
-    Example:
-</h3>
+<p>
+    Parameters should be written in one line like this:
+    Parameters: Name1=value Name2 Name3 Name4=value
+</p>
+<TABLE border=2px>
+    <CAPTION><h3>Possible parameters</h3></CAPTION>
+    <TR>
+        <TD>Name</TD>
+        <TD>Possible value</TD>
+        <TD>Value by default</TD>
+        <TD>Description</TD>
+    </TR>
+    <TR>
+        <TD>NoNumbers</TD>
+        <TD>No possible value*</TD>
+        <TD>Not stated</TD>
+        <TD>If stated, number of lines in each section is not required.<br>
+            New section will be detected by key line (Terminals/Non-terminals/Rules)<br>
+            And \0 is expected after the last section
+        </TD>
 
-Terminals(2):<br>
-a<br>
-b<br>
-Non-terminals(1):<br>
-A-S<br>
-Rules(3):<br>
-A - <br>
-A - A A<br>
-A - a A b<br>
+    </TR>
+    <TR>
+        <TD>Order</TD>
+        <TD>TN/NT/NS</TD>
+        <TD>TN</TD>
+        <TD>T is for "Terminals", N for "Non-terminals". NS is for "not stated"<br>
+            The order of sections will be changed according to the value. If value<br>
+            is NS, order will be chosen automatically. However Rules sections must<br>
+            <b>always</b> be the last one
+        </TD>
+    </TR>
+    <TR>
+        <TD>NoStarting</TD>
+        <TD>No possible value*</TD>
+        <TD>Not stated</TD>
+        <TD>If stated, '-S' suffix is not required to starting terminals. Only the<br>
+            first non-terminal will be considered starting<br>
+        </TD>
+    </TR>
+</TABLE>
+*<i>No possible value</i> means that the parameter can only be stated or not stated in<br>
+the first line and '=value' is not allowed after it<br>
+<br>
+<TABLE border=0px>
+    <TR>
+        <TD>
+            <h3>
+                Example(without parameters):
+            </h3>
+
+            Terminals(2):<br>
+            a<br>
+            b<br>
+            Non-terminals(1):<br>
+            A-S<br>
+            Rules(3):<br>
+            A - <br>
+            A - A A<br>
+            A - a A b<br>
+        </TD>
+        <TD width=200px></TD>
+        <TD>
+            <h3>
+                Example(with parameters):
+            </h3>
+
+            Parameters: NoNumbers Order=NS NoStarting
+            Non-terminals:<br>
+            A<br>
+            Terminals:<br>
+            a<br>
+            b<br>
+            Rules:<br>
+            A - <br>
+            A - A A<br>
+            A - a A b<br>
+        </TD>
+    </TR>
+</TABLE>
