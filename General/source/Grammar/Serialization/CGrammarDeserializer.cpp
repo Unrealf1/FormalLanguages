@@ -23,12 +23,14 @@ namespace formals { namespace grammars {
         ssize_t CGrammarDeserializer::getNumberFromText(
                 const std::string& format_string) const {
             auto left_bracket = format_string.begin();
-            for (; left_bracket != format_string.end() && *left_bracket != '('; ++left_bracket) {}
+            for (; left_bracket != format_string.end()
+                && *left_bracket !='('; ++left_bracket) {}
             if (left_bracket == format_string.end()) {
                 return -1;
             }
             auto right_bracket = format_string.rbegin();
-            for (; right_bracket != format_string.rend() && *right_bracket != ')'; ++right_bracket) {}
+            for (; right_bracket != format_string.rend()
+                && *right_bracket != ')'; ++right_bracket) {}
             if (right_bracket == format_string.rend()) {
                 return -1;
             }
@@ -48,8 +50,33 @@ namespace formals { namespace grammars {
             catch (...) {
                 return -1;
             }
+        }
 
+        bool IsKeyString(const std::string& str) {
+            return str.substr(0, kTerminalsKeyLine.size()) == kTerminalsKeyLine ||
+                str.substr(0, kNonTerminalsKeyLine.size()) == kNonTerminalsKeyLine ||
+                str.substr(0, kRulesKeyLine.size()) == kRulesKeyLine;
+        }
 
+        bool CGrammarDeserializer::readTerminals(
+                std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                std::unordered_set<ruleSymbolValyeType>& terminals,
+                std::string& next_section) const {
+
+            std::string current_line;
+            std::getline(stream_, current_line);
+
+            while(current_line != next_section) {
+                ruleSymbolValyeType value = dict.size();
+                dict[value] = current_line;
+                reverse_dict[current_line] = value;
+                terminals.insert(value);
+                std::getline(stream_, current_line);
+            }
+
+            next_section = current_line;
+            return true;
         }
 
         bool CGrammarDeserializer::readTerminals(
@@ -80,7 +107,31 @@ namespace formals { namespace grammars {
         bool CGrammarDeserializer::readNonTerminals(
                 std::unordered_map<ruleSymbolValyeType, std::string>& dict,
                 std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                std::unordered_set<ruleSymbolValyeType>& non_terminals,
+                std::unordered_set<ruleSymbolValyeType>& starting,
+                std::string& next_section) const {
+
+            std::string current_line;
+            std::getline(stream_, current_line);
+            while (current_line != next_section) {
+                std::string non_terminal;
+                ruleSymbolValyeType value = dict.size();
+                if (IsStarting(current_line)) {
+                    non_terminal = current_line.substr(0, current_line.size() - 2);
+                    starting.insert(value);
+                } else {
+                    non_terminal = std::move(current_line);
+                }
+                dict[value] = non_terminal;
+                reverse_dict[non_terminal] = value;
+                std::getline(stream_, current_line);
+            }
+            return true;
+
+        }
+
+        bool CGrammarDeserializer::readNonTerminals(
+                std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                 std::unordered_set<ruleSymbolValyeType>& starting,
                 size_t number) const {
 
@@ -97,7 +148,6 @@ namespace formals { namespace grammars {
                 }
                 dict[value] = non_terminal;
                 reverse_dict[non_terminal] = value;
-                non_terminals.insert(value);
             }
             return true;
 
@@ -122,6 +172,46 @@ namespace formals { namespace grammars {
             }
         }
 
+        void CGrammarDeserializer::readRule(
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                std::unordered_set<ruleSymbolValyeType>& terminals,
+                std::unordered_set<ruleSymbolValyeType>& starting) const {
+            std::vector<RuleSymbol> left_part;
+            std::string item;
+            stream_ >> item;
+            while (item != "-") {
+                RuleSymbol symbol;
+                symbol.value = reverse_dict[item];
+
+                symbol.is_terminal = (terminals.find(symbol.value) != terminals.end());
+                if (!symbol.is_terminal) {
+                    symbol.is_starting = (starting.find(symbol.value) != starting.end());
+                }
+                left_part.push_back(symbol);
+
+                stream_ >> item;
+            }
+
+            std::string right_part_line;
+            std::getline(stream_, right_part_line);
+            std::vector<std::string> right_items;
+
+            GetRightPartFromLine(right_part_line, right_items);
+            std::vector<RuleSymbol> right_part;
+
+            for (auto& right_item : right_items) {
+                RuleSymbol symbol;
+                symbol.value = reverse_dict[right_item];
+
+                symbol.is_terminal = (terminals.find(symbol.value) != terminals.end());
+                if (!symbol.is_terminal) {
+                    symbol.is_starting = (starting.find(symbol.value) != starting.end());
+                }
+                right_part.push_back(symbol);
+            }
+            my_grammar_->AddRule({left_part, right_part});
+        }
+
         bool CGrammarDeserializer::readRules(
                 std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
                 std::unordered_set<ruleSymbolValyeType>& terminals,
@@ -129,99 +219,112 @@ namespace formals { namespace grammars {
                 size_t number) const {
 
             for (size_t i = 0; i < number; ++i) {
-                std::vector<RuleSymbol> left_part;
-                std::string item;
-                stream_ >> item;
-                while (item != "-") {
-                    RuleSymbol symbol;
-                    symbol.value = reverse_dict[item];
+                readRule(reverse_dict, terminals, starting);
+            }
 
-                    symbol.is_terminal = (terminals.find(symbol.value) != terminals.end());
-                    if (!symbol.is_terminal) {
-                        symbol.is_starting = (starting.find(symbol.value) != starting.end());
-                    }
-                    left_part.push_back(symbol);
+            return true;
+        }
 
-                    stream_ >> item;
-                }
+        bool CGrammarDeserializer::readRules(
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                std::unordered_set<ruleSymbolValyeType>& terminals,
+                std::unordered_set<ruleSymbolValyeType>& starting) const {
 
-                std::string right_part_line;
-                std::getline(stream_, right_part_line);
-                std::vector<std::string> right_items;
-
-                GetRightPartFromLine(right_part_line, right_items);
-                std::vector<RuleSymbol> right_part;
-
-                for (auto& right_item : right_items) {
-                    RuleSymbol symbol;
-                    symbol.value = reverse_dict[right_item];
-
-                    symbol.is_terminal = (terminals.find(symbol.value) != terminals.end());
-                    if (!symbol.is_terminal) {
-                        symbol.is_starting = (starting.find(symbol.value) != starting.end());
-                    }
-                    right_part.push_back(symbol);
-                }
-                my_grammar_->AddRule({left_part, right_part});
+            while (!stream_.eof()) {
+                readRule(reverse_dict, terminals, starting);
             }
             return true;
+        }
 
+
+        void ParseTextParameters(
+                const std::string& param_line,
+                bool& no_numbers,
+                parameters::Order& order,
+                bool& no_starting) {
+            formals::errors::ReportError(
+                    formals::errors::ErrorType::not_implemented,
+                    "ParseTextParameters");
         }
 
         std::shared_ptr<CGenerativeGrammar> CGrammarDeserializer::textDecode() {
             std::string current_line;
             std::unordered_map<ruleSymbolValyeType, std::string> dict;
             std::unordered_map<std::string, ruleSymbolValyeType> reverse_dict;
+            bool no_numbers = false;
+            parameters::Order order = parameters::Order::TN;
+            bool no_starting = false;
 
-            std::getline(stream_, current_line);
-            ssize_t number_of_terminals = getNumberFromText(current_line);
 
-            if (number_of_terminals == -1) {
-                formals::errors::ReportError(
-                        formals::errors::ErrorType::wrong_text_format,
-                        "Number of terminals");
-                return nullptr;
-            }
-            std::unordered_set<ruleSymbolValyeType > terminals;
-            if (!readTerminals(dict, reverse_dict, terminals, number_of_terminals)) {
-                formals::errors::ReportError(
-                        formals::errors::ErrorType::wrong_text_format,
-                        "Terminals section");
-                return nullptr;
-            }
+            try {
+                std::getline(stream_, current_line);
+                if (current_line.substr(0, kParametersKeyLine.size()) ==
+                    kParametersKeyLine) {
+                    ParseTextParameters(
+                            current_line,
+                            no_numbers,
+                            order,
+                            no_starting);
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::not_implemented,
+                            "Parameters support");
+                    return nullptr;
+                }
+                ssize_t number_of_terminals = getNumberFromText(current_line);
 
-            std::getline(stream_, current_line);
-            ssize_t number_of_non_terminals = getNumberFromText(current_line);
-            if (number_of_non_terminals == -1) {
-                formals::errors::ReportError(
-                        formals::errors::ErrorType::wrong_text_format,
-                        "Number of non-terminals");
-                return nullptr;
-            }
-            std::unordered_set<ruleSymbolValyeType> non_terminals;
-            std::unordered_set<ruleSymbolValyeType> starting;
-            if (!readNonTerminals(dict, reverse_dict, non_terminals, starting, number_of_non_terminals)) {
-                formals::errors::ReportError(
-                        formals::errors::ErrorType::wrong_text_format,
-                        "Non-terminals section");
-                return nullptr;
-            }
+                if (number_of_terminals == -1) {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::wrong_text_format,
+                            "Number of terminals:\n" + current_line);
+                    return nullptr;
+                }
+                std::unordered_set<ruleSymbolValyeType> terminals;
+                if (!readTerminals(dict, reverse_dict, terminals, number_of_terminals)) {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::wrong_text_format,
+                            "Terminals section");
+                    return nullptr;
+                }
 
-            std::getline(stream_, current_line);
-            ssize_t number_of_rules = getNumberFromText(current_line);
-            if (number_of_rules == -1) {
-                formals::errors::ReportError(
-                        formals::errors::ErrorType::wrong_text_format,
-                        "Number of rules");
-                return nullptr;
+                std::getline(stream_, current_line);
+                ssize_t number_of_non_terminals = getNumberFromText(current_line);
+                if (number_of_non_terminals == -1) {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::wrong_text_format,
+                            "Number of non-terminals\n" + current_line);
+                    return nullptr;
+                }
+                std::unordered_set<ruleSymbolValyeType> non_terminals;
+                std::unordered_set<ruleSymbolValyeType> starting;
+                if (!readNonTerminals(dict, reverse_dict, starting, number_of_non_terminals)) {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::wrong_text_format,
+                            "Non-terminals section");
+                    return nullptr;
+                }
+
+                std::getline(stream_, current_line);
+                ssize_t number_of_rules = getNumberFromText(current_line);
+                if (number_of_rules == -1) {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::wrong_text_format,
+                            "Number of rules\n" + current_line);
+                    return nullptr;
+                }
+                if (!readRules(reverse_dict, terminals, starting, number_of_rules)) {
+                    formals::errors::ReportError(
+                            formals::errors::ErrorType::wrong_text_format,
+                            "Rules section");
+                    return nullptr;
+                }
+                my_grammar_representer_.reset(new CGrammarRepresenter(std::move(dict)));
             }
-            if (!readRules(reverse_dict, terminals, starting, number_of_rules)) {
-                formals::errors::ReportError(
-                        formals::errors::ErrorType::wrong_text_format,
-                        "Rules section");
-                return nullptr;
+            catch (std::ios_base::failure& fail) {
+                formals::errors::ReportError(formals::errors::ErrorType::exception,
+                        fail.what());
+                my_grammar_.reset();
+                my_grammar_representer_.reset();
             }
-            my_grammar_representer_.reset(new CGrammarRepresenter(std::move(dict)));
             return my_grammar_;
         }
 

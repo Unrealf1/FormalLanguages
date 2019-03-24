@@ -27,7 +27,12 @@ int main(int argc, char** argv) {
     }
     formals::grammars::CGrammarDeserializer deserializer(iff, formals::grammars::ReadMode::text);
     std::shared_ptr<formals::grammars::CGenerativeGrammar> user_grammar = deserializer.GetGrammar();
-
+    if (user_grammar == nullptr) {
+        formals::errors::ReportError(
+                formals::errors::ErrorType::null_pointer,
+                "Can't parse simple grammar");
+        return 1;
+    }
     for (auto& rule : *user_grammar) {
         for (auto& sym : rule.left_part) {
             std::cout << sym.value;

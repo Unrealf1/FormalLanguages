@@ -10,7 +10,8 @@
 
 namespace formals { namespace errors {
     enum class ErrorType {
-        not_implemented, wrong_text_format, unreachable_code, null_pointer, cant_open_file
+        not_implemented, wrong_text_format, unreachable_code,
+        null_pointer, cant_open_file, exception
     };
 
     void ReportError(ErrorType error, const std::string& info = "Error");

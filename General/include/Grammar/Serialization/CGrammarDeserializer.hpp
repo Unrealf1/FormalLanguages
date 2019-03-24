@@ -18,10 +18,19 @@ namespace formals { namespace grammars {
         binary, text
     };
 
+    namespace parameters {
+        enum class Order {
+            TN, NT, NS
+        };
+    }
+
+    const std::string kTerminalsKeyLine = "Terminals";
+    const std::string kNonTerminalsKeyLine = "Non-terminals";
+    const std::string kRulesKeyLine = "Rules";
+    const std::string kParametersKeyLine = "Parameters";
+
     class CGrammarDeserializer
     {
-
-
         public:
             CGrammarDeserializer(
                     std::istream& stream,
@@ -43,7 +52,19 @@ namespace formals { namespace grammars {
             std::shared_ptr<CGenerativeGrammar> binaryDecode();
             std::shared_ptr<CGenerativeGrammar> textDecode();
 
+            /*Extracts number from key line (like "Terminals(5):")*/
             ssize_t getNumberFromText(const std::string&) const;
+
+            /* Extracts pne rule from the stream and add necessary
+             * information to my_grammar and my_grammar_representer_*/
+            void readRule(
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& terminals,
+                    std::unordered_set<ruleSymbolValyeType>& starting) const;
+
+
+            /* This functions read {number} of terminals/non-terminals/rules from
+             * stream and add necessary information to my_grammar and my_grammar_representer_*/
             bool readTerminals(
                     std::unordered_map<ruleSymbolValyeType, std::string>& dict,
                     std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
@@ -52,7 +73,6 @@ namespace formals { namespace grammars {
             bool readNonTerminals(
                     std::unordered_map<ruleSymbolValyeType, std::string>& dict,
                     std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                    std::unordered_set<ruleSymbolValyeType>& non_terminals,
                     std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
             bool readRules(
@@ -60,6 +80,29 @@ namespace formals { namespace grammars {
                     std::unordered_set<ruleSymbolValyeType>& terminals,
                     std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
+
+
+            /* This functions read terminals/non-terminals from stream until encounter a string
+             * equal to {next_section} and add necessary information to my_grammar and my_grammar_representer_
+             * They return first key line, that they encounter to next_section variable*/
+            bool readTerminals(
+                    std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& terminals,
+                    std::string& next_section) const;
+            bool readNonTerminals(
+                    std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& starting,
+                    std::string& next_section) const;
+
+            /*This functions read rules from stream while it can and add necessary
+             * information to my_grammar and my_grammar_representer_*/
+            bool readRules(
+                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    std::unordered_set<ruleSymbolValyeType>& terminals,
+                    std::unordered_set<ruleSymbolValyeType>& starting) const;
+
     };
 
 }}

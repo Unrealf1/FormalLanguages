@@ -27,6 +27,10 @@ namespace formals { namespace  errors {
                 std::cout << info << ": Can't open file" << std::endl;
                 break;
             }
+            case ErrorType::exception: {
+                std::cout << "Caught exception:" << info << std::endl;
+                break;
+            }
         }
     }
 }}
