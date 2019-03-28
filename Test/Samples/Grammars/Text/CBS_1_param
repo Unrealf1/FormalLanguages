@@ -1,8 +1,9 @@
-Parameters: NoNumbers Order=NS NoStarting Non-terminals:
-A
+Parameters: NoNumbers NoStarting
 Terminals:
 a
 b
+Non-terminals:
+A
 Rules:
 A -
 A - A A

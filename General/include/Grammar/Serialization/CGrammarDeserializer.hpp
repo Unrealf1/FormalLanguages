@@ -8,6 +8,7 @@
 #include <cassert>
 #include <iostream>
 #include <vector>
+#include <sstream>
 #include "ErrorHelper.h"
 #include "Grammar/CGenerativeGrammar.hpp"
 #include "Grammar/CRule.hpp"
@@ -19,9 +20,9 @@ namespace formals { namespace grammars {
     };
 
     namespace parameters {
-        enum class Order {
-            TN, NT, NS
-        };
+
+        const std::string kNoNumbersString = "NoNumbers";
+        const std::string kNoStartingString = "NoStarting";
     }
 
     const std::string kTerminalsKeyLine = "Terminals";
@@ -58,9 +59,9 @@ namespace formals { namespace grammars {
             /* Extracts pne rule from the stream and add necessary
              * information to my_grammar and my_grammar_representer_*/
             void readRule(
-                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                    std::unordered_set<ruleSymbolValyeType>& terminals,
-                    std::unordered_set<ruleSymbolValyeType>& starting) const;
+                    const std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    const std::unordered_set<ruleSymbolValyeType>& terminals,
+                    const std::unordered_set<ruleSymbolValyeType>& starting) const;
 
 
             /* This functions read {number} of terminals/non-terminals/rules from
@@ -76,32 +77,55 @@ namespace formals { namespace grammars {
                     std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
             bool readRules(
-                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                    std::unordered_set<ruleSymbolValyeType>& terminals,
-                    std::unordered_set<ruleSymbolValyeType>& starting,
+                    const std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    const std::unordered_set<ruleSymbolValyeType>& terminals,
+                    const std::unordered_set<ruleSymbolValyeType>& starting,
                     size_t number) const;
 
 
-            /* This functions read terminals/non-terminals from stream until encounter a string
-             * equal to {next_section} and add necessary information to my_grammar and my_grammar_representer_
-             * They return first key line, that they encounter to next_section variable*/
+            /* This functions read terminals/non-terminals from stream until encounter a key string
+             * and add necessary information to my_grammar and my_grammar_representer_
+             */
             bool readTerminals(
                     std::unordered_map<ruleSymbolValyeType, std::string>& dict,
                     std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                    std::unordered_set<ruleSymbolValyeType>& terminals,
-                    std::string& next_section) const;
+                    std::unordered_set<ruleSymbolValyeType>& terminals) const;
             bool readNonTerminals(
                     std::unordered_map<ruleSymbolValyeType, std::string>& dict,
                     std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                    std::unordered_set<ruleSymbolValyeType>& starting,
-                    std::string& next_section) const;
+                    std::unordered_set<ruleSymbolValyeType>& starting) const;
 
             /*This functions read rules from stream while it can and add necessary
              * information to my_grammar and my_grammar_representer_*/
             bool readRules(
-                    std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
-                    std::unordered_set<ruleSymbolValyeType>& terminals,
-                    std::unordered_set<ruleSymbolValyeType>& starting) const;
+                    const std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                    const std::unordered_set<ruleSymbolValyeType>& terminals,
+                    const std::unordered_set<ruleSymbolValyeType>& starting) const;
+
+        bool GetTerminals (
+                std::string& current_line,
+                bool no_numbers,
+                bool no_starting,
+                std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                std::unordered_set<ruleSymbolValyeType>& terminals);
+
+        bool GetNonTerminals (
+                std::string& current_line,
+                bool no_numbers,
+                bool no_starting,
+                std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                std::unordered_set<ruleSymbolValyeType>& starting);
+
+        bool GetRules (
+                std::string& current_line,
+                bool no_numbers,
+                bool no_starting,
+                const std::unordered_map<ruleSymbolValyeType, std::string>& dict,
+                const std::unordered_map<std::string, ruleSymbolValyeType>& reverse_dict,
+                const std::unordered_set<ruleSymbolValyeType>& terminals,
+                const std::unordered_set<ruleSymbolValyeType>& starting);
 
     };
 

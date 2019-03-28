@@ -47,16 +47,6 @@ Note: this is still work in progress<br>
 
     </TR>
     <TR>
-        <TD>Order</TD>
-        <TD>TN/NT/NS</TD>
-        <TD>TN</TD>
-        <TD>T is for "Terminals", N for "Non-terminals". NS is for "not stated"<br>
-            The order of sections will be changed according to the value. If value<br>
-            is NS, order will be chosen automatically. However Rules sections must<br>
-            <b>always</b> be the last one
-        </TD>
-    </TR>
-    <TR>
         <TD>NoStarting</TD>
         <TD>No possible value*</TD>
         <TD>Not stated</TD>
@@ -91,12 +81,12 @@ the first line and '=value' is not allowed after it<br>
                 Example(with parameters):
             </h3>
 
-            Parameters: NoNumbers Order=NS NoStarting
-            Non-terminals:<br>
-            A<br>
+            Parameters: NoNumbers NoStarting<br>
             Terminals:<br>
             a<br>
             b<br>
+            Non-terminals:<br>
+            A<br>
             Rules:<br>
             A - <br>
             A - A A<br>
